@@ -1,24 +1,96 @@
-name: Build
+name: Release
 on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  create-release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-20.04
+    outputs:
+      release_id: ${{ steps.create-release.outputs.result }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
-      with:
-        bun-version: latest
-    - name: Install Dependencies
-      run: bun install
-    - name: Build
-      run: bun run build
-    - name: Upload Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: dist/index.html
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Get Package Metadata
+        run: |
+          echo "PACKAGE_NAME=$(cat package.json | jq -r '.name')" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$(cat package.json | jq -r '.version')" >> $GITHUB_ENV
+      - name: Create Release
+        id: create-release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `${process.env.PACKAGE_NAME}-v${process.env.PACKAGE_VERSION}`,
+              name: `SecureHash v${process.env.PACKAGE_VERSION}`,
+              body: 'Take a look at the assets to download and install this app.',
+              draft: true,
+              prerelease: process.env.PACKAGE_VERSION.split('-').length > 1
+            })
+            return data.id
+  build-tauri:
+    needs: create-release
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - platform: 'macos-latest'
+            args: '--target universal-apple-darwin'
+          - platform: 'ubuntu-20.04'
+            args: '--target x86_64-unknown-linux-gnu'
+          - platform: 'windows-latest'
+            args: '--target x86_64-pc-windows-msvc'
+    runs-on: ${{ matrix.target.platform }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install System Dependencies (Ubuntu Only)
+        if: matrix.target.platform == 'ubuntu-20.04'
+        run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+      - name: Setup Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+      - name: Install Frontend Dependencies
+        run: npm ci
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: ${{ matrix.target.args }}
+          releaseId: ${{ needs.create-release.outputs.release_id }}
+  publish-release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-20.04
+    needs: [create-release, build-tauri]
+    steps:
+      - name: Publish Release
+        id: publish-release
+        uses: actions/github-script@v6
+        env:
+          release_id: ${{ needs.create-release.outputs.release_id }}
+        with:
+          script: |
+            github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: process.env.release_id,
+              draft: false,
+            })
