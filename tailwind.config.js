@@ -1,13 +1,15 @@
-import formsPLugin from '@tailwindcss/forms';
+import path from 'path';
+
+import config from '@douglasneuroinformatics/ui/tailwind.config';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: [...config.content, path.resolve(__dirname, './src/**/*.{js,ts,jsx,tsx}')],
+  presets: [config],
   theme: {
-    extend: {},
-  },
-  plugins: [formsPLugin],
-}
+    fontFamily: {
+      sans: ['Inter var', ...defaultTheme.fontFamily.sans]
+    }
+  }
+};
