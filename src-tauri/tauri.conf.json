@@ -15,6 +15,9 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "window": {
+        "print": true
       }
     },
     "bundle": {
@@ -53,10 +56,12 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 650,
+        "minHeight": 650,
+        "minWidth": 1000,
         "resizable": true,
         "title": "DNP Secure Hash",
-        "width": 800
+        "width": 1000
       }
     ]
   }
