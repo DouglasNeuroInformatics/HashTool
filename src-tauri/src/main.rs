@@ -1,10 +1,15 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use sha2::{Digest, Sha256};
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn hash(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+fn hash(text: &str) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(text);
+    let result = hasher.finalize();
+    format!("{:x}", result)
 }
 
 fn main() {
