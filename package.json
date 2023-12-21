@@ -4,13 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build",
-    "dev": "vite",
+    "build": "tauri build",
+    "build:web": "tsc && vite build",
+    "dev": "tauri dev",
+    "dev:web": "vite",
     "lint": "tsc && eslint --fix src",
     "storybook": "storybook dev -p 6006",
-    "tauri": "tauri",
-    "tauri:build": "tauri build",
-    "tauri:dev": "tauri dev"
+    "tauri": "tauri"
   },
   "dependencies": {
     "@douglasneuroinformatics/ui": "^5.1.0",
