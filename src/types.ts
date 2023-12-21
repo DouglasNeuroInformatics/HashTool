@@ -5,4 +5,5 @@ export type Info = {
 export type AppState = {
   hash: string | null;
   info: Info | null;
+  isLoading: boolean;
 };
