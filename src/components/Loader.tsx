@@ -27,6 +27,11 @@ export const Loader = ({ onComplete }: LoaderProps) => {
       })
       .with('COMPLETE', () => onComplete())
       .exhaustive();
+    return () => {
+      if (id) {
+        clearTimeout(id);
+      }
+    };
   }, [spring, status]);
 
   useEffect(() => {
