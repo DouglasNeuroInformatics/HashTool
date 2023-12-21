@@ -1,15 +1,17 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { P, match } from 'ts-pattern';
+
 import { InfoForm } from './components/InfoForm';
 import { Layout } from './components/Layout';
+import { useAppStore } from './stores/app-store';
 
 export const App = () => {
+  const store = useAppStore();
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route index element={<InfoForm />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Layout>
+      {match(store)
+        .with({ info: P.nullish }, () => <InfoForm />)
+        .with({ info: P.not(P.nullish) }, () => null)
+        .exhaustive()}
+    </Layout>
   );
 };

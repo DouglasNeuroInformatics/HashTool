@@ -1,9 +1,12 @@
 import { Form } from '@douglasneuroinformatics/ui';
 import { z } from 'zod';
 
+import { useAppStore, type Info } from '@/stores/app-store';
+
 export const InfoForm = () => {
+  const { setInfo } = useAppStore();
   return (
-    <Form
+    <Form<Info>
       content={[
         {
           title: 'Confidential Information',
@@ -18,7 +21,7 @@ export const InfoForm = () => {
           }
         }
       ]}
-      onSubmit={(data) => alert(JSON.stringify(data))}
+      onSubmit={setInfo}
       validationSchema={z.object({
         healthCardNumber: z.string().min(1)
       })}
