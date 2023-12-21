@@ -6,8 +6,10 @@
   "scripts": {
     "build": "tsc && vite build",
     "dev": "vite",
-    "preview": "vite preview",
-    "tauri": "tauri"
+    "lint": "tsc && eslint --fix src",
+    "tauri": "tauri",
+    "tauri:build": "tauri build",
+    "tauri:dev": "tauri dev"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.2",
