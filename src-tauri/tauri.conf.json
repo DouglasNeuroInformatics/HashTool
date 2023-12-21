@@ -1,7 +1,7 @@
 {
   "build": {
-    "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "npm run dev",
     "devPath": "http://localhost:1420",
     "distDir": "../dist"
   },
@@ -19,15 +19,32 @@
     },
     "bundle": {
       "active": true,
-      "targets": "all",
+      "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
       "identifier": "com.douglasneuroinformatics.secure-hash",
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ]
+      "macOS": {
+        "license": "../LICENSE",
+        "minimumSystemVersion": "10.13"
+      },
+      "targets": "all",
+      "windows": {
+        "allowDowngrades": true,
+        "certificateThumbprint": null,
+        "digestAlgorithm": null,
+        "nsis": {
+          "license": "../LICENSE",
+          "installMode": "currentUser"
+        },
+        "timestampUrl": null,
+        "tsp": false,
+        "webviewFixedRuntimePath": null,
+        "webviewInstallMode": {
+          "silent": true,
+          "type": "downloadBootstrapper"
+        },
+        "wix": {
+          "license": "../LICENSE"
+        }
+      }
     },
     "security": {
       "csp": null
@@ -35,10 +52,10 @@
     "windows": [
       {
         "fullscreen": false,
+        "height": 600,
         "resizable": true,
         "title": "secure-hash",
-        "width": 800,
-        "height": 600
+        "width": 800
       }
     ]
   }
