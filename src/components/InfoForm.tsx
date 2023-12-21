@@ -1,10 +1,12 @@
+import type { Info } from '@/types';
 import { Form } from '@douglasneuroinformatics/ui';
 import { z } from 'zod';
 
-import { useAppStore, type Info } from '@/stores/app-store';
+export type InfoFormProps = {
+  onSubmit: (info: Info) => void;
+};
 
-export const InfoForm = () => {
-  const { setInfo } = useAppStore();
+export const InfoForm = ({ onSubmit }: InfoFormProps) => {
   return (
     <Form<Info>
       content={[
@@ -21,7 +23,7 @@ export const InfoForm = () => {
           }
         }
       ]}
-      onSubmit={setInfo}
+      onSubmit={onSubmit}
       validationSchema={z.object({
         healthCardNumber: z.string().min(1)
       })}
