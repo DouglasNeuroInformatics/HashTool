@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { viteSingleFile } from 'vite-plugin-singlefile';
 
 import autoprefixer from 'autoprefixer';
 import tailwindcss from 'tailwindcss';
@@ -8,5 +9,6 @@ export default defineConfig({
     postcss: {
       plugins: [tailwindcss, autoprefixer]
     }
-  }
+  },
+  plugins: [viteSingleFile()]
 });
