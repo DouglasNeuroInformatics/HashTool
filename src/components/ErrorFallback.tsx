@@ -1,5 +1,5 @@
 export const ErrorFallback = () => (
-  <div className="flex min-h-screen flex-col items-center justify-center gap-1 p-3 text-center">
+  <div className="flex flex-grow flex-col items-center justify-center gap-1 p-3 text-center">
     <h1 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">
       Unexpected Error
     </h1>

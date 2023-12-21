@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { P, match } from 'ts-pattern';
 
@@ -9,6 +9,8 @@ import { Result } from './components/Result';
 import type { AppState } from './types';
 import { ErrorFallback } from './components/ErrorFallback';
 
+import { invoke } from '@tauri-apps/api';
+
 const initialState: AppState = Object.freeze({
   hash: null,
   info: null
@@ -17,13 +19,21 @@ const initialState: AppState = Object.freeze({
 export const App = () => {
   const [state, setState] = useState<AppState>(initialState);
 
+  useEffect(() => {
+    if (state.info) {
+      invoke<string>('hash', { text: 'Josh' }).then((hash) => {
+        setState((prevState) => ({ ...prevState, hash }));
+      });
+    }
+  }, [state.info]);
+
   return (
     <Layout>
       {match(state)
         .with({ info: P.nullish }, () => (
           <InfoForm
             onSubmit={(info) => {
-              setState((prevState) => ({ ...prevState, info: info, hash: '12345' }));
+              setState((prevState) => ({ ...prevState, info: info }));
             }}
           />
         ))

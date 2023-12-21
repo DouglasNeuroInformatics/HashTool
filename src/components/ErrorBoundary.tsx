@@ -38,7 +38,11 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   render() {
     if (this.state.didCatch) {
-      return <ErrorFallback />;
+      return (
+        <div className="h-screen">
+          <ErrorFallback />
+        </div>
+      );
     }
     return this.props.children;
   }
