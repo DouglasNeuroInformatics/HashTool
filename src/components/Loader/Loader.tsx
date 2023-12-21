@@ -15,7 +15,7 @@ export const Loader = ({ onComplete }: LoaderProps) => {
   const rounded = useTransform(spring, (latest: number) => Math.floor(latest));
 
   useEffect(() => {
-    let id: number;
+    let id: any;
     match(status)
       .with('LOADING', () => {
         id = setTimeout(() => {
