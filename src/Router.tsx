@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation, useOutlet } from 'react-rout
 
 import { ErrorFallback } from './components/ErrorFallback';
 import { Layout } from './components/Layout';
-import { HashPage, HashResultPage } from './features/hash';
+import { HashLayout, HashPage, HashResultPage } from './features/hash';
 import { HomePage } from './features/home';
 
 const Root = () => {
@@ -34,7 +34,7 @@ export const Router = () => {
         <Route element={<Root />}>
           <Route element={<Layout />}>
             <Route index element={<HomePage />} path="/" />
-            <Route path="hash">
+            <Route element={<HashLayout />} path="hash">
               <Route index element={<HashPage />} />
               <Route element={<HashResultPage />} path="result" />
             </Route>
