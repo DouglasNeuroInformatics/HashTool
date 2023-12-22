@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 
+import { cn } from '@douglasneuroinformatics/ui';
+import { invoke } from '@tauri-apps/api';
 import { type MotionValue, motion, useSpring, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { match } from 'ts-pattern';
 
-type Status = 'COMPLETE' | 'COMPUTING' | 'LOADING';
+import { HashInfoForm } from '../components/HashInfoForm';
+import { useHashStore } from '../store/hash-store';
 
-export const HashLoadingPage = () => {
+type Status = 'COMPLETE' | 'COMPUTING' | 'INITIAL' | 'LOADING';
+
+export const HashPage = () => {
   const navigate = useNavigate();
-  const [status, setStatus] = useState<Status>('LOADING');
+  const { setHash } = useHashStore();
+  const [status, setStatus] = useState<Status>('INITIAL');
 
   const spring = useSpring(0, { bounce: 0 }) as MotionValue<number>;
   const rounded = useTransform(spring, (latest: number) => Math.floor(latest));
@@ -16,6 +22,7 @@ export const HashLoadingPage = () => {
   useEffect(() => {
     let id: NodeJS.Timeout;
     match(status)
+      .with('INITIAL', () => null)
       .with('LOADING', () => {
         id = setTimeout(() => {
           setStatus('COMPUTING');
@@ -42,8 +49,18 @@ export const HashLoadingPage = () => {
   }, [rounded]);
 
   return (
-    <div className="flex flex-grow flex-col items-center justify-center">
+    <div className={cn('flex-grow', status !== 'INITIAL' && 'flex flex-col items-center justify-center')}>
       {match(status)
+        .with('INITIAL', () => (
+          <HashInfoForm
+            onSubmit={({ healthCardNumber }) => {
+              void invoke<string>('hash', { text: healthCardNumber }).then((hash) => {
+                setHash(hash);
+                setStatus('LOADING');
+              });
+            }}
+          />
+        ))
         .with('LOADING', () => {
           return <h5 className="text-lg font-semibold">Loading SHA-256 Algorithm...</h5>;
         })

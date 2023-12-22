@@ -1,3 +1,2 @@
-export * from './pages/HashInfoPage';
-export * from './pages/HashLoadingPage';
+export * from './pages/HashPage';
 export * from './pages/HashResultPage';
