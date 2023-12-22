@@ -12,6 +12,8 @@ import { ErrorFallback } from './components/ErrorFallback';
 
 import { invoke } from '@tauri-apps/api';
 import { Loader } from './components/Loader';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Router } from './Router';
 
 const initialState: AppState = Object.freeze({
   hash: null,
@@ -51,20 +53,5 @@ export const App = () => {
     ))
     .otherwise(() => <ErrorFallback error={{ message: 'Unknown Error' }} key="error" />);
 
-  return (
-    <Layout>
-      <AnimatePresence mode="wait">
-        <motion.div
-          animate={{ opacity: 1 }}
-          className="flex flex-grow flex-col"
-          key={content.key}
-          exit={{ opacity: 0 }}
-          initial={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {content}
-        </motion.div>
-      </AnimatePresence>
-    </Layout>
-  );
+  return <Router />;
 };
