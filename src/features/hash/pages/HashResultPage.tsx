@@ -1,11 +1,11 @@
 import { Button } from '@douglasneuroinformatics/ui';
+import { useNavigate } from 'react-router-dom';
 
-export type ResultProps = {
-  hash: string;
-  onComplete: () => void;
-};
+import { useHashStore } from '../store/hash-store';
 
-export const Result = ({ hash, onComplete }: ResultProps) => {
+export const HashResultPage = () => {
+  const navigate = useNavigate();
+  const { hash } = useHashStore();
   return (
     <div className="space-y-3">
       <div>
@@ -20,7 +20,14 @@ export const Result = ({ hash, onComplete }: ResultProps) => {
       </p>
       <div className="flex gap-3">
         <Button label="Print Result" type="button" onClick={() => print()} />
-        <Button label="Go Back" type="button" variant="secondary" onClick={onComplete} />
+        <Button
+          label="Go Back"
+          type="button"
+          variant="secondary"
+          onClick={() => {
+            navigate('/');
+          }}
+        />
       </div>
     </div>
   );

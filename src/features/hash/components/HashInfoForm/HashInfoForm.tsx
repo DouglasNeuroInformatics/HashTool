@@ -1,17 +1,17 @@
-import type { Info } from '@/types';
 import { Form } from '@douglasneuroinformatics/ui';
 import { z } from 'zod';
 
-export type InfoFormProps = {
-  onSubmit: (info: Info) => void;
+import type { HashInfo } from '../../types';
+
+export type HashInfoFormProps = {
+  onSubmit: (info: HashInfo) => void;
 };
 
-export const InfoForm = ({ onSubmit }: InfoFormProps) => {
+export const HashInfoForm = ({ onSubmit }: HashInfoFormProps) => {
   return (
-    <Form<Info>
+    <Form<HashInfo>
       content={[
         {
-          title: 'Confidential Information',
           description:
             'For security reasons, this information is never saved on your computer or uploaded to a remote server.',
           fields: {
@@ -20,13 +20,14 @@ export const InfoForm = ({ onSubmit }: InfoFormProps) => {
               label: 'RAMQ Number',
               variant: 'short'
             }
-          }
+          },
+          title: 'Confidential Information'
         }
       ]}
-      onSubmit={onSubmit}
       validationSchema={z.object({
-        healthCardNumber: z.string().regex(/^\d{4}-[A-Za-z]{4}-[A-Za-z]{4}$/, 'Invalid Format')
+        healthCardNumber: z.string().regex(/^[A-Za-z]{4}-\d{4}-\d{4}$/, 'Invalid Format')
       })}
+      onSubmit={onSubmit}
     />
   );
 };

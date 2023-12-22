@@ -1,21 +1,20 @@
-import { type MotionValue, motion, useSpring, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
+
+import { type MotionValue, motion, useSpring, useTransform } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { match } from 'ts-pattern';
 
-type Status = 'LOADING' | 'COMPUTING' | 'COMPLETE';
+type Status = 'COMPLETE' | 'COMPUTING' | 'LOADING';
 
-type LoaderProps = {
-  onComplete: () => void;
-};
-
-export const Loader = ({ onComplete }: LoaderProps) => {
+export const HashLoadingPage = () => {
+  const navigate = useNavigate();
   const [status, setStatus] = useState<Status>('LOADING');
 
   const spring = useSpring(0, { bounce: 0 }) as MotionValue<number>;
   const rounded = useTransform(spring, (latest: number) => Math.floor(latest));
 
   useEffect(() => {
-    let id: any;
+    let id: NodeJS.Timeout;
     match(status)
       .with('LOADING', () => {
         id = setTimeout(() => {
@@ -25,7 +24,7 @@ export const Loader = ({ onComplete }: LoaderProps) => {
       .with('COMPUTING', () => {
         spring.set(100);
       })
-      .with('COMPLETE', () => onComplete())
+      .with('COMPLETE', () => navigate('/hash/result'))
       .exhaustive();
     return () => {
       if (id) {
