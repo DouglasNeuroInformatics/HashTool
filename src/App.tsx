@@ -49,7 +49,7 @@ export const App = () => {
     .with({ info: P.not(P.nullish), hash: P.string }, ({ hash }) => (
       <Result key="result" hash={hash} onComplete={() => setState(initialState)} />
     ))
-    .otherwise(() => <ErrorFallback key="error" />);
+    .otherwise(() => <ErrorFallback error={{ message: 'Unknown Error' }} key="error" />);
 
   return (
     <Layout>
