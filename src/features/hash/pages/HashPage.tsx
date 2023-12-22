@@ -49,7 +49,7 @@ export const HashPage = () => {
   }, [rounded]);
 
   return (
-    <div className={cn('flex-grow', status !== 'INITIAL' && 'flex flex-col items-center justify-center')}>
+    <div className={cn('min-h-full flex-grow', status !== 'INITIAL' && 'flex flex-col items-center justify-center')}>
       {match(status)
         .with('INITIAL', () => (
           <HashInfoForm
