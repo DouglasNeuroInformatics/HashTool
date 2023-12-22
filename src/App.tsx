@@ -24,7 +24,7 @@ export const App = () => {
 
   useEffect(() => {
     if (state.info) {
-      invoke<string>('hash', { text: 'Josh' }).then((hash) => {
+      invoke<string>('hash', { text: state.info.healthCardNumber }).then((hash) => {
         setState((prevState) => ({ ...prevState, hash, isLoading: true }));
       });
     }
