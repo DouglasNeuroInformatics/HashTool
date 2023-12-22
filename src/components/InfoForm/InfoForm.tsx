@@ -25,7 +25,7 @@ export const InfoForm = ({ onSubmit }: InfoFormProps) => {
       ]}
       onSubmit={onSubmit}
       validationSchema={z.object({
-        healthCardNumber: z.string().min(1)
+        healthCardNumber: z.string().regex(/^\d{4}-[A-Za-z]{4}-[A-Za-z]{4}$/, 'Invalid Format')
       })}
     />
   );
