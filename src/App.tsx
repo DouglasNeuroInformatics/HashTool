@@ -1,5 +1,12 @@
+import { NotificationHub } from '@douglasneuroinformatics/ui';
+
 import { Router } from './Router';
 
 export const App = () => {
-  return <Router />;
+  return (
+    <>
+      <NotificationHub />
+      <Router />
+    </>
+  );
 };
